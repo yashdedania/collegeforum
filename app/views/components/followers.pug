@@ -1,0 +1,8 @@
+.col-lg-4
+  .follower
+    - if (user.pid !== undefined)
+      p #{user.pid} , #{user.role}
+    div.follower__user-info
+      span.follower__handle
+        - if (user.pid !== undefined)
+          a(href="/users/profile/" + user._id) @#{user.pid}

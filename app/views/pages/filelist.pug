@@ -1,0 +1,12 @@
+extends ../layouts/layoutblank
+block content
+	each value in fileList
+		if(value.split("_id_")[5].toString() != "commitee")
+			if (value.split("_id_")[0].toString() == req.session.user.dept || req.session.user.role == "admin")
+				div(style="width:210px;float:left") 
+					a(href="/users/profile/" + value.split("_id_")[3]) @#{value.split("_id_")[1]} - #{value.split("_id_")[2]}
+					a(href="./files/"+value, target="_blank")
+						img(src="./files/"+value, height=200, width=200)
+					span #{value.split("_id_")[4]} 
+					if (req.session.user._id == value.split("_id_")[3].toString() || req.session.user.role == "admin")
+						a(href="javascript:void(0)",file=value, id="delete") Delete

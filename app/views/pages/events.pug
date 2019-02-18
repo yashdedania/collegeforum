@@ -1,0 +1,74 @@
+extends ../layouts/default
+
+block content
+  .row
+    .col-xl-3.col-lg-4.first-column
+      .user-information
+        .row
+          .col-4.user-information__image
+            h4 #{req.session.user.name}
+          .col-8.user-information__text
+            a(href="/users/" + req.session.user._id)
+              h4 #{req.session.user.pid}
+              h6 #{req.session.user.role}
+            .user-information__stats.user-information__stats_small
+              ul
+                li
+                  span.user-information__stat-title Questions:
+                  span
+                    a(href="/users/" + req.session.user._id) #{tweetCount}
+                li
+                  span.user-information__stat-title Following:
+                  span 
+                    a(href="/users/" + req.session.user._id + "/following")  #{followingCount}
+                li
+                  span.user-information__stat-title Followers: 
+                  span
+                    a(href="/users/" + req.session.user._id + "/followers")  #{followerCount}
+          .col-md-12.user-information__stats.user-information__stats_large
+            ul
+              li
+                span.user-information__stat-title Questions:
+                span
+                  a(href="/users/" + req.session.user._id) #{tweetCount}
+              li
+                span.user-information__stat-title Following:
+                span 
+                  a(href="/users/" + req.session.user._id + "/following")  #{followingCount}
+              li
+                span.user-information__stat-title Followers: 
+                span
+                  a(href="/users/" + req.session.user._id + "/followers")  #{followerCount}
+      .useful-links
+        include ../components/useful-links
+      .recent-visits
+        //include ../components/recent-visits
+        //p recent-visits
+
+    .col-xl-6.col-lg-8.second-column
+      if (req.session.user.role == "commitee" || req.session.user.role == "admin")
+        h4 Upload Event Details
+        form(name="fileUpload", action="/fileUpload",enctype="multipart/form-data", method="post",role="form", class="form-inline" id="fileUpload")
+          .form-group
+            label Choose file to upload: 
+            input(name="uploadfile", type="file", id="myFile")
+          .form-group
+            textarea(placeholder="Enter a Description", name="myDescp", form="fileUpload", cols="50") Enter a Description
+          .form-group
+            input(value="UPLOAD", type="submit", class="btn btn-primary")
+          div(class="progress",style="display:none;margin-top:10px;")
+           div(class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100") 0% 
+      br
+      div
+       h4 Upcoming Events
+       p *Click on file to download
+      p(id="msg")
+       #files  
+
+
+    .col-xl-3.col-lg-4.third-column
+      //.recent-visits.col-xs-6.col-md-12
+        //include ../components/recent-visits
+        //p recent-visits
+      //.useful-links.col-xs-6.col-md-12
+        //include ../components/useful-links

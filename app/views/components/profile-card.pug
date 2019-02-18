@@ -1,0 +1,33 @@
+- var modalId = user._id + 'ChatModal';
+- var name = user.pid ? user.pid : user.role
+- var currentUserId = req.session.user._id.toString()
+- var userId = user._id.toString()
+
+.profile
+  .profile__user-pid
+    p #{user.name} , #{user.role}
+  .profile__user-info
+    span.profile__handle
+      a(href="/users/" + user._id, target='_blank') @#{user.pid}
+    .profile__messaging-options
+      - if (currentUserId !== userId)
+        a.btn(data-toggle='modal', href='#'+ modalId) Message #{name}
+        a.btn.profile__follow-button(href="javascript:void(0)", data-userid=user._id, data-logged=req.session.user._id,title="follow") Follow
+    if (req.session)
+      include modals/new-message-modal                   
+  .row
+    .col-12.user-information__stats
+      ul
+        li
+          span.user-information__stat-title Questions:
+          span
+            a(href="/users/" + user._id) #{tweetCount}
+        li
+          span.user-information__stat-title Following:
+          span
+            a(href="/users/" + user._id + "/following")  #{followingCount}
+        li
+          span.user-information__stat-title Followers:
+          span
+            a(href="/users/" + user._id + "/followers")  #{followerCount}
+        

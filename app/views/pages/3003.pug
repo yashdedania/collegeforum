@@ -1,0 +1,12 @@
+extends ../layouts/default
+
+block main
+  h1 Warning
+  br
+  span 
+
+block content
+  #error-message-box
+    #error-stack-trace
+      pre
+        code!= error

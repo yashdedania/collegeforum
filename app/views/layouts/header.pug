@@ -1,0 +1,54 @@
+body
+  header.navbar(role='banner')
+    .container
+      if (req.session)
+        .navbar__group.navbar__group_left
+          ul.navbar__main-navigation
+            if (1)
+              li
+                a(href="/users/"+req.session.user._id title="Home")
+                  i(class="fas fa-home", aria-hidden="true")
+                  span Home
+              |
+            if (req.session.user.role == "student" || req.session.user.role == "teacher" || req.session.user.role == "admin")
+              li
+                a(href="/users/profile/"+req.session.user._id, title="Profile")
+                  i(class="fas fa-user", aria-hidden="true")
+                  span Profile
+              |
+            if (req.session.user.role == "admin")
+              li
+                a(href="/analytics/", title="analytics")
+                  i(class="fas fa-chart-line", aria-hidden="true")
+                  span Analytics
+            if (req.session.user.role == "student" || req.session.user.role == "teacher" || req.session.user.role == "commitee")
+              li
+                a(href='/chat/get/' + req.session.user._id, title="Inbox")
+                  i(class="far fa-envelope", aria-hidden="true")
+                  span Inbox
+            if (req.session.user.role == "student" || req.session.user.role == "teacher" || req.session.user.role == "commitee")
+              li
+                a(href="/chat/", title="chat")
+                  i(class="far fa-comments", aria-hidden="true")
+                  span Message
+            if (req.session.user.role == "admin")
+              li
+                a(href="/activities", title="activity")
+                  i(class="far fa-bell", aria-hidden="true")
+      span.navbar__logo
+        a(href='/login')
+          h4 College Connect
+      if (req.session)
+        .navbar__group.navbar__group_right
+          
+          .navbar__profile
+            a(href="/logout", title="logout", class="navbar__profile-logout")
+              span Logout
+          if (req.session.user.role == "student" || req.session.user.role == "teacher")    
+            .navbar__new-tweet
+              a.navbar__new-tweet-button.btn(data-toggle='modal', href='.new-tweet')
+                span Ask Question
+          pre 
+            h6.role_h6     Role : #{req.session.user.role}
+  if (req.session)
+    include ../components/modals/new-tweet-modal

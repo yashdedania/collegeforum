@@ -1,0 +1,57 @@
+extends ../layouts/default
+
+block content
+  .row
+    .col-xl-3.col-lg-4.first-column
+      .user-information
+        .row
+          .col-4.user-information__image
+            h4 #{req.session.user.name}
+          .col-8.user-information__text
+            a(href="/users/" + req.session.user._id)
+              h5 #{req.session.user.pid}
+              h6 #{req.session.user.role}
+            .user-information__stats.user-information__stats_small
+              ul
+                li
+                  span.user-information__stat-title Questions:
+                  span
+                    a(href="/users/" + req.session.user._id) #{tweetCount}
+                li
+                  span.user-information__stat-title Following:
+                  span 
+                    a(href="/users/" + req.session.user._id + "/following")  #{followingCount}
+                li
+                  span.user-information__stat-title Followers: 
+                  span
+                    a(href="/users/" + req.session.user._id + "/followers")  #{followerCount}
+          .col-md-12.user-information__stats.user-information__stats_large
+            ul
+              li
+                span.user-information__stat-title Questions:
+                span
+                  a(href="/users/" + req.session.user._id) #{tweetCount}
+              li
+                span.user-information__stat-title Following:
+                span 
+                  a(href="/users/" + req.session.user._id + "/following")  #{followingCount}
+              li
+                span.user-information__stat-title Followers: 
+                span
+                  a(href="/users/" + req.session.user._id + "/followers")  #{followerCount}
+      .useful-links
+        include ../components/useful-links
+      .recent-visits
+        //include ../components/recent-visits
+        //p recent-visits
+    .col-xl-6.col-lg-8.second-column
+      include ../components/tweets
+      include ../components/pagination 
+
+
+    .col-xl-3.col-lg-4.third-column
+      .recent-visits.col-xs-6.col-md-12
+        //include ../components/recent-visits
+        //p recent-visits
+      .useful-links.col-xs-6.col-md-12
+        include ../components/useful-links

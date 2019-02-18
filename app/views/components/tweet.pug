@@ -1,0 +1,25 @@
+.tweet(data-tweetId = tweet._id)
+  .row
+    .col-1
+      h6 #{tweet.user.name}
+    .col-11.tweet__description
+      span.tweet__username-date
+        span.tweet__username
+          -var name = tweet.user.pid ? tweet.user.pid : tweet.user.role
+          a(href="/users/profile/"+tweet.user._id) #{name}
+        span.tweet__date
+          a(data-toggle='modal', href="#tweet-modal-"+tweet._id)  • #{formatDate(tweet.createdAt, "%b %d, %Y at %I:%M %p")}
+      p.tweet__content= tweet.body
+      form.tweet__form(action="/tweets/"+tweet.id+"?_method=DELETE", method="post")
+        if (tweet.user._id == req.session.user._id || req.session.user.role == "admin")
+          a.btn.tweet__edit(href="/tweets/"+tweet._id) Edit
+          button.btn.tweet__delete(type="submit") Delete
+        if (tweet.user._id != req.session.user._id || req.session.user.role == "admin")
+          a.btn.bookmark_btn(href="/tweets/"+tweet._id+"/bookmark")
+            if(tweet.bookmarks.indexOf(req.session.user._id) !== -1) 
+              i.fas.fa-bookmark
+            if(tweet.bookmarks.indexOf(req.session.user._id) === -1) 
+              i.far.fa-bookmark
+          a.btn.upvote(href="/tweets/"+tweet._id+"/upvote") Upvote #{tweet.upvotes.length}
+          a.btn.downvote(href="/tweets/"+tweet._id+"/downvote") Downvote #{tweet.downvotes.length}
+    include comments

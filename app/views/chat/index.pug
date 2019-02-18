@@ -1,0 +1,40 @@
+extends ../layouts/default
+
+block content
+  .row.twitter-container
+    .col-xl-12.col-lg-12.first-column
+      .logged-user
+        .row
+          .container
+            h1
+              != title
+            p Click on the name/image to send a message.
+            div.row.chatgroup
+              each user in users
+                div.col-md-3.chat-bubble
+                  - var name = user.name ? user.name : user.pid
+                  - var id = user._id + 'ChatModal';
+                  a(data-toggle='modal', href='#'+ id)
+                    #{user.name}
+                    span  #{user.name} - #{user.pid} - #{user.role}
+                  - var currentUserId = req.session.user._id.toString()
+                  - var userId = user._id.toString()
+
+                if (req.session)
+                  div(id=id, class='modal fade')
+                    .modal-dialog(role='document')
+                      .modal-content
+                        .modal-header
+                          button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+                          h4.modal-title Send new message to #{name}
+                        .modal-body
+                          form(method='post', action='/chats')
+                            .control-group
+                              label.control-label(for='chat')
+                              .controls
+                                textarea.flat.form-control(type='text', name='body', placeholder='Enter your Message here', maxlength='200')
+                                input(type="hidden", name='receiver', value=user._id)
+                            .form-actions
+                              button.btn(type='submit') Send Message
+  include ../components/pagination 
+        

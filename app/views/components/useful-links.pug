@@ -1,0 +1,17 @@
+h4.useful-links__title Useful links
+ul.useful-links__list
+if (1)
+  ul
+    a(href="/bookmarks") Bookmarks
+if (req.session.user.role == "student" || req.session.user.role == "teacher" || req.session.user.role == "admin")
+  ul
+    a(href="/resources") Resources
+if (req.session.user.role == "student" || req.session.user.role == "teacher" || req.session.user.role == "admin")
+  ul
+    a(href="/news") News
+if (1)
+  ul
+    a(href="/events") Events
+if (req.session.user.role == "student" || req.session.user.role == "teacher" || req.session.user.role == "commitee")
+  ul
+    a(href="/reportbug") Report a Bug

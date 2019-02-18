@@ -1,0 +1,8 @@
+h4.recent-visits__title Recent Visits
+ul.recent-visits__list
+  each analytic in analytics
+    if analytic.user
+      -var pid = analytic.user.pid ? analytic.user.pid : analytic.user.role
+      li
+        a(href="/users/"+analytic.user._id)= name
+          span   (#{moment(analytic.createdAt).format('lll')})

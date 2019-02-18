@@ -1,0 +1,176 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='description', content='College connect')
+    meta(name='author', content='CollegeForum')
+
+    title College Connect
+
+    link(href='/css/bootstrap/bootstrap.min.css', rel='stylesheet')
+    link(href='/css/fontawesome-all.min.css', rel="stylesheet")
+    link(href='/css/style.css', rel='stylesheet')
+    // Favicon
+    link(rel='shortcut icon', href='/img/bird.png')
+    script(type='text/javascript', src='/js/jquery.min.js')
+    // Bootstrap depedency
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.min.js')
+    script(type='text/javascript', src='/js/bootstrap/bootstrap.min.js')
+    script(type='text/javascript', src='/js/app.js')
+
+    script(src="/js/fileupload.js")
+
+  if (req.session)
+  body.login-screen
+    header.navbar(role='banner')
+      .container
+        if (req.session)
+          .navbar__group.navbar__group_left
+            ul.navbar__main-navigation
+              if (req.session.user.role == "student" || req.session.user.role == "teacher" || req.session.user.role == "admin")
+                li
+                  a(href="/users/"+req.session.user._id title="Home")
+                    i(class="fas fa-home", aria-hidden="true")
+                    span Home
+                |
+              if (req.session.user.role == "student" || req.session.user.role == "teacher" || req.session.user.role == "admin")
+                li
+                  a(href="/users/profile/"+req.session.user._id, title="Profile")
+                    i(class="fas fa-user", aria-hidden="true")
+                    span Profile
+                |
+              if (req.session.user.role == "admin")
+                li
+                  a(href="/analytics/", title="analytics")
+                    i(class="fas fa-chart-line", aria-hidden="true")
+                    span Analytics
+              if (req.session.user.role == "student" || req.session.user.role == "teacher")
+                li
+                  a(href='/chat/get/' + req.session.user._id, title="Inbox")
+                    i(class="far fa-envelope", aria-hidden="true")
+                    span Inbox
+              if (req.session.user.role == "student" || req.session.user.role == "teacher")
+                li
+                  a(href="/chat/", title="chat")
+                    i(class="far fa-comments", aria-hidden="true")
+                    span Message
+              if (req.session.user.role == "admin")
+                li
+                  a(href="/activities", title="activity")
+                    i(class="far fa-bell", aria-hidden="true")
+        span.navbar__logo
+          a(href='/login')
+            h4 College Connect
+        if (req.session)
+          .navbar__group.navbar__group_right
+            .navbar__profile
+              a(href="/logout", title="logout", class="navbar__profile-logout")
+                span Logout
+            if (req.session.user.role == "student" || req.session.user.role == "teacher" || req.session.user.role == "admin")    
+              .navbar__new-tweet
+                a.navbar__new-tweet-button.btn(data-toggle='modal', href='.new-tweet')
+                  if (req.session.user.role == "teacher" || req.session.user.role == "admin")
+                    span Add News
+                  if (req.session.user.role == "student")
+                    span Ask Question                  
+    if (req.session)
+      .new-tweet.modal.fade
+        .modal-dialog(role='document')
+          .modal-content
+            .modal-header
+              if (req.session.user.role == "teacher" || req.session.user.role == "admin")
+                button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+                h4.modal-title Add News
+              if (req.session.user.role == "student")
+                button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+                h4.modal-title Compose new Question
+            .modal-body
+                if (req.session.user.role == "teacher" || req.session.user.role == "admin")
+                  form(method='post', action='/news/add')
+                    textarea(type='text', name='body', placeholder='Enter the news here', maxlength='280')
+                    button.btn.new-tweet__button(type='submit') Add
+                if (req.session.user.role == "student")
+                  form(method='post', action='/tweets')
+                    textarea(type='text', name='body', placeholder='Enter your question here', maxlength='280')
+                    button.btn.new-tweet__button(type='submit') Ask                   
+    .container
+      block content
+        .row
+          .col-xl-3.col-lg-4.first-column
+            .user-information
+              .row
+                .col-4.user-information__image
+                  h4 #{req.session.user.name}
+                .col-8.user-information__text
+                  a(href="/users/" + req.session.user._id)
+                    h5 #{req.session.user.pid}
+                    h6 #{req.session.user.role}
+                  .user-information__stats.user-information__stats_small
+                    ul
+                      li
+                        span.user-information__stat-title Questions:
+                        span
+                          a(href="/users/" + req.session.user._id) #{tweetCount}
+                      li
+                        span.user-information__stat-title Following:
+                        span 
+                          a(href="/users/" + req.session.user._id + "/following")  #{followingCount}
+                      li
+                        span.user-information__stat-title Followers: 
+                        span
+                          a(href="/users/" + req.session.user._id + "/followers")  #{followerCount}
+                .col-md-12.user-information__stats.user-information__stats_large
+                  ul
+                    li
+                      span.user-information__stat-title Questions:
+                      span
+                        a(href="/users/" + req.session.user._id) #{tweetCount}
+                    li
+                      span.user-information__stat-title Following:
+                      span 
+                        a(href="/users/" + req.session.user._id + "/following")  #{followingCount}
+                    li
+                      span.user-information__stat-title Followers: 
+                      span
+                        a(href="/users/" + req.session.user._id + "/followers")  #{followerCount}
+            .useful-links
+              include ../components/useful-links
+            .recent-visits
+              //include ../components/recent-visits
+              //p recent-visits
+
+          .col-xl-6.col-lg-8.second-column
+            h5 Latest News
+            if (news.length == 0)
+              h5 No News. Check Later !
+            if (news)  
+              each tweet in news
+                if (tweet.user != undefined)
+                  .tweet(data-tweetId = tweet._id)
+                    .row
+                      .col-1
+                        h6 #{tweet.user.name}
+                      .col-11.tweet__description
+                        span.tweet__username-date
+                          span.tweet__username
+                            -var name = tweet.user.role ? tweet.user.role : ""
+                            a(href="/users/profile/"+tweet.user._id) #{name}
+                          span.tweet__date
+                            a(data-toggle='modal', href="#tweet-modal-"+tweet._id)  • #{formatDate(tweet.createdAt, "%b %d, %Y at %I:%M %p")}
+                        p.tweet__content= tweet.body
+                        if (tweet.user._id == req.session.user._id || req.session.user.role == "admin")
+                          form.tweet__form(action="/news/"+tweet._id+"?_method=DELETE", method="post")
+                            a.btn.tweet__edit(href="/news/"+tweet._id) Edit
+                            button.btn.tweet__delete(type="submit") Delete
+
+
+          .col-xl-3.col-lg-4.third-column
+            //.recent-visits.col-xs-6.col-md-12
+              //include ../components/recent-visits
+              //p recent-visits
+            //.useful-links.col-xs-6.col-md-12
+              //include ../components/useful-links
+    footer(role='contentinfo')
+      .container
+        p College Forum is a BE Project by SFIT Students
